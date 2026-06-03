@@ -8,13 +8,18 @@ class App:
     def __init__(self):
         pyxel.init(SCRNW,SCRNH,'BudgetVSMachine')
         pyxel.load('assets.pyxres')
+        pyxel.mouse(True)
         self.en=Enemy(1,8)
+        self.sentry=Turret(1,-16,-16)
         pyxel.run(self.update,self.draw)
 
     def update(self):
         if pyxel.btnp(pyxel.KEY_ESCAPE):
             pyxel.quit()
         self.en.update()
+        if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT):
+            self.sentry.posx=pyxel.mouse_x-8
+            self.sentry.posy=pyxel.mouse_y-8
         
     def mapinit(self):
         x=0
@@ -67,12 +72,16 @@ class App:
     def draw(self):
         self.mapinit()
         self.en.draw()
+        if self.en.lose==True:
+            pyxel.text(0,0,'LOST LOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOL',pyxel.frame_count % 16)
+        self.sentry.draw()
 
 class Enemy:
 
     def __init__(self,health,speed):
         self.health=health
         self.speed=speed
+        self.lose=False
         self.posx=0
         self.posy=96
         self.step0=True
@@ -133,12 +142,21 @@ class Enemy:
             if not self.posy==SCRNH and self.posx==192 and self.step11==True:
                 self.step10=False
                 self.posy+=self.speed
-            if self.posy==SCRNH+16:
-                pyxel.text(0,0,'LOST',0)
+            if self.posy==SCRNH:
+                self.lose=True                
 
 
     def draw(self):
         pyxel.blt(self.posx,self.posy,1,0,0,16,16,pyxel.COLOR_BLACK)
 
+class Turret:
+
+    def __init__(self,lvl,posx,posy):
+        self.lvl=lvl
+        self.posx=posx
+        self.posy=posy
+
+    def draw(self):
+        pyxel.blt(self.posx,self.posy,2,0,0,16,16,pyxel.COLOR_WHITE)
 
 App()
