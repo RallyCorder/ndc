@@ -18,8 +18,8 @@ class App:
             pyxel.quit()
         self.en.update()
         if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT):
-            self.sentry.posx=pyxel.mouse_x-8
-            self.sentry.posy=pyxel.mouse_y-8
+            self.sentry.posx=pyxel.mouse_x-16
+            self.sentry.posy=pyxel.mouse_y-16
         
     def mapinit(self):
         x=0
@@ -157,6 +157,6 @@ class Turret:
         self.posy=posy
 
     def draw(self):
-        pyxel.blt(self.posx,self.posy,2,0,0,16,16,pyxel.COLOR_WHITE)
+        pyxel.blt(self.posx,self.posy,2,0,0,-16,16,pyxel.COLOR_WHITE,0,2)
 
 App()
