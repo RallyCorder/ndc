@@ -9,17 +9,33 @@ class App:
         pyxel.init(SCRNW,SCRNH,'BudgetVSMachine')
         pyxel.load('assets.pyxres')
         pyxel.mouse(True)
-        self.en=Enemy(1,8)
+        self.scoutbot=Enemy(1,2)
         self.sentry=Turret(1,-16,-16)
+        self.sentryactive=False
+        self.bullet=Bullet(-16,-16)
+        self.win=False
         pyxel.run(self.update,self.draw)
 
     def update(self):
         if pyxel.btnp(pyxel.KEY_ESCAPE):
             pyxel.quit()
-        self.en.update()
+        self.scoutbot.update()
         if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT):
             self.sentry.posx=pyxel.mouse_x-16
             self.sentry.posy=pyxel.mouse_y-16
+            self.sentryactive=True
+        if self.sentryactive==True:
+            self.bullet.posx=pyxel.mouse_x
+            self.bullet.posy=pyxel.mouse_y
+        if self.collide():
+            self.win=True
+
+    def collide(self):
+        if self.bullet.posx>=self.scoutbot.posx+16 or self.scoutbot.posx>=self.bullet.posx+16:
+            return False
+        if self.bullet.posy>=self.scoutbot.posy+16 or self.scoutbot.posy>=self.bullet.posy+16:
+            return False
+        return True
         
     def mapinit(self):
         x=0
@@ -70,11 +86,23 @@ class App:
             y+=8
 
     def draw(self):
+        if self.win==True:
+            x=0
+            y=0
+            for _ in range(SCRNW//8):
+                for _ in range(SCRNW//8):
+                    pyxel.blt(x,y,0,0,0,16,16)
+                    x+=8
+                x=0
+                y+=8
+            pyxel.text(256,128,'VICTORY, YOU WINNER WOOOOOO',pyxel.frame_count % 16)
+            return 
         self.mapinit()
-        self.en.draw()
-        if self.en.lose==True:
+        self.scoutbot.draw()
+        if self.scoutbot.lose==True:
             pyxel.text(0,0,'LOST LOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOLOL',pyxel.frame_count % 16)
         self.sentry.draw()
+        self.bullet.draw()
 
 class Enemy:
 
@@ -158,5 +186,14 @@ class Turret:
 
     def draw(self):
         pyxel.blt(self.posx,self.posy,2,0,0,-16,16,pyxel.COLOR_WHITE,0,2)
+
+class Bullet:
+
+    def __init__(self,posx,posy):
+        self.posy=posy
+        self.posx=posx
+
+    def draw(self):
+        pyxel.blt(self.posx,self.posy,2,0,16,16,16,pyxel.COLOR_BLACK)
 
 App()
