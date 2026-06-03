@@ -8,7 +8,7 @@ class App:
     def __init__(self):
         pyxel.init(SCRNW,SCRNH,'BudgetVSMachine')
         pyxel.load('assets.pyxres')
-        self.en=Enemy(1,2)
+        self.en=Enemy(1,8)
         pyxel.run(self.update,self.draw)
 
     def update(self):
@@ -81,6 +81,12 @@ class Enemy:
         self.step3=False
         self.step4=True
         self.step5=False
+        self.step6=False
+        self.step7=False
+        self.step8=False
+        self.step9=False
+        self.step10=False
+        self.step11=False
 
     def update(self):
         if pyxel.frame_count % 1 == 0:
@@ -90,7 +96,7 @@ class Enemy:
                 self.step0=False
                 self.posy-=self.speed
             if not self.posx==128 and self.posy==32 and self.step2==True:
-                self.step1==False
+                self.step1=False
                 self.step3=True
                 self.posx-=self.speed
             if not self.posy==192 and self.posx==128 and self.step3==True:
@@ -98,12 +104,37 @@ class Enemy:
                 self.posy+=self.speed
             if not self.posx==64 and self.posy==192 and self.step4==True:
                 self.step3=False
+                self.step6=True
                 self.step5=True
                 self.posx-=self.speed
-            if not self.posy==108 and self.posx==64 and self.step5==True:
+            if not self.posy==128 and self.posx==64 and self.step5==True:
                 self.step4=False
                 self.posy-=self.speed
-            
+            if not self.posx==256 and self.posy==128 and self.step6==True:
+                self.step5=False
+                self.step7=True
+                self.posx+=self.speed
+            if not self.posy==64 and self.posx==256 and self.step7==True:
+                self.step6=False
+                self.step8=True
+                self.posy-=self.speed
+            if not self.posx==320 and self.posy==64 and self.step8==True:
+                self.step7=False
+                self.step9=True
+                self.posx+=self.speed
+            if not self.posy==176 and self.posx==320 and self.step9==True:
+                self.step8=False
+                self.step10=True
+                self.posy+=self.speed
+            if not self.posx==192 and self.posy==176 and self.step10==True:
+                self.step9=False
+                self.step11=True
+                self.posx-=self.speed
+            if not self.posy==SCRNH and self.posx==192 and self.step11==True:
+                self.step10=False
+                self.posy+=self.speed
+            if self.posy==SCRNH+16:
+                pyxel.text(0,0,'LOST',0)
 
 
     def draw(self):
