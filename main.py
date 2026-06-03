@@ -6,7 +6,7 @@ SCRNW=512
 class App:
 
     def __init__(self):
-        pyxel.init(SCRNW,SCRNH,'NDC')
+        pyxel.init(SCRNW,SCRNH,'BudgetVSMachine')
         pyxel.load('assets.pyxres')
         self.en=Enemy(1,2)
         pyxel.run(self.update,self.draw)
@@ -75,13 +75,39 @@ class Enemy:
         self.speed=speed
         self.posx=0
         self.posy=96
+        self.step0=True
+        self.step1=True
+        self.step2=True
+        self.step3=False
+        self.step4=True
+        self.step5=False
 
     def update(self):
         if pyxel.frame_count % 1 == 0:
-            self.posx+=self.speed
+            if not self.posx==192 and self.posy==96 and self.step0==True:
+                self.posx+=self.speed
+            if not self.posy==32 and self.posx==192 and self.step1==True:
+                self.step0=False
+                self.posy-=self.speed
+            if not self.posx==128 and self.posy==32 and self.step2==True:
+                self.step1==False
+                self.step3=True
+                self.posx-=self.speed
+            if not self.posy==192 and self.posx==128 and self.step3==True:
+                self.step2=False
+                self.posy+=self.speed
+            if not self.posx==64 and self.posy==192 and self.step4==True:
+                self.step3=False
+                self.step5=True
+                self.posx-=self.speed
+            if not self.posy==108 and self.posx==64 and self.step5==True:
+                self.step4=False
+                self.posy-=self.speed
+            
+
 
     def draw(self):
-        pyxel.blt(self.posx,self.posy,1,0,0,16,16)
+        pyxel.blt(self.posx,self.posy,1,0,0,16,16,pyxel.COLOR_BLACK)
 
 
 App()
